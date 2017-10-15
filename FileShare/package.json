@@ -1,0 +1,17 @@
+{
+  "name": "socket-chat-example",
+  "version": "0.0.1",
+  "description": "my first socket.io app",
+  "dependencies": {
+    "connect": "^3.6.5",
+    "delivery": "0.0.6",
+    "express": "^4.16.2",
+    "internal-ip": "^3.0.1",
+    "serve-index": "^1.9.1",
+    "socket.io": "^1.7.3",
+    "tinyurl": "^1.1.2"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Balloon</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+    
+  </head>
+  <body>
+     <div id="wrapper">
+      <h1>Drag a File, or Click to Select One</h1>
+      <h3 id ="FileLink"> </h3>
+
+      <form>
+
+        <input type="file" class="DropButton">
+        <h2></h2>
+        <input type="submit" value="Upload" align="center" id="submit">
+      </form>
+      <div id="outcome"></div>
+    </div>
+     <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="delivery.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js"></script>
+
+
+    <!-- Insert this line after script imports -->
+  <script>if (window.module) module = window.module;</script>
+    <script>
+
+
+    
+    var MyIP;
+    var FileName;
+    var MyLink = "wow";
+    var MyID;
+		
+
+		
+		
+      $(function () {
+
+
+        var socket = io('http://localhost:3000/');
+        socket.on('connect', function(){
+        socket.on('SendIP', function (IP, ID){
+            MyIP = IP;
+            MyID = ID;
+            
+
+            
+            
+          });
+         socket.on('SendURL', function (URL){
+            document.getElementById("FileLink").innerHTML = innerHTML + URL;
+
+            
+            
+          });
+            var delivery = new Delivery(socket);
+
+            delivery.on('delivery.connect',function(delivery){
+               
+              $("input[type=submit]").click(function(evt){
+                FileName = $('input[type=file]').val().split('\\').pop();
+                console.log(FileName);
+                var file = $("input[type=file]")[0].files[0];
+                delivery.send(file);
+                evt.preventDefault();
+              });
+            });
+          delivery.on('send.success',function(fileUID){
+            console.log("file was successfully sent.");
+            //MyLink = MyIP+":3000"+"/"+"Files/"+FileName;
+
+            MyLink = MyIP+":3000"+"/Files/"+FileName+".html";
+            
+            document.getElementById("FileLink").innerHTML = "Success! Here's the link:" + "<br>" +MyLink;
+
+
+            
+          });
+          delivery.on('receive.start',function(fileUID){
+            console.log('receiving a file!');
+          });
+
+          delivery.on('receive.success',function(file){
+            if (file.isImage()) {
+              $('img').attr('src', file.dataURL());
+            };
+          });
+
+            
+          });
+
+
+
+
+      });
+    </script>
+	<script>
+	
+	
+	</script>
+  </body>
+</html>
